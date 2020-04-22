@@ -19,6 +19,10 @@
       <Content Include="res\music\mainTrack.flac">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+      <None Remove="res\images\tank.png" />
+      <Content Include="res\images\tank.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>
