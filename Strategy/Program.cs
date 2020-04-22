@@ -11,7 +11,7 @@ namespace strategy
         public static uint ScreenWidth;
         public static uint ScreenHeight;
         private const string Title = "MARS CONQUEST";
-        public static int CurrentState;
+        public static int CurrentState = 0;
 
         private const int Seed = 228;
 
@@ -33,7 +33,7 @@ namespace strategy
 
             var sound = new Sound
             {
-                SoundBuffer = new SoundBuffer("/home/fritzler/Рабочий стол/study/game/Strategy/Strategy/res/music/mainTrack.flac"),
+                SoundBuffer = new SoundBuffer("res/music/mainTrack.flac"),
                 Loop = true
             };
             sound.Play();
