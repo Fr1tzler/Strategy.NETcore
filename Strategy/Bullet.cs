@@ -1,28 +1,54 @@
+using SFML.Graphics;
 using SFML.System;
 
 namespace strategy
 {
     public class Bullet
     {
-        public bool friendly;
-        public Vector2f origin;
-        public Vector2f direction;
-        public Vector2f position;
-        public double maxDistance;
-        public float speed;
-        public bool exist;
+        private Vector2f _from;
+        private Vector2f _to;
+        private CircleShape _self;
+        private bool _friendly;
+        private int _iteration;
+        public bool Exist;
         
-        public Bullet(bool a)
+        public Bullet(Vector2f from, Vector2f to, bool friendly)
         {
-            friendly = a;
+            _self = new CircleShape{
+                Position =  from,
+                Radius = 3,
+                Origin = new Vector2f(3,3),
+                FillColor = friendly ? Color.Green : Color.Red,
+                OutlineColor = Color.Black,
+                OutlineThickness = 1
+            };
+            _iteration = 1;
+            _friendly = friendly;
+            _from = from;
+            _to = to;
+            Exist = true;
+
         }
 
-        public void Move()
+        public void Update()
         {
-            position += speed * direction;
-            if (MathModule.Length(position - origin) > maxDistance)
+            _self.Position = _from * (10 - _iteration) / 10 + _to * _iteration / 10;
+            _iteration++;
+            if (_iteration > 10) Exist = false;
+        }
+
+        public void Display(RenderWindow window)
+        {
+            window.Draw(_self);
+        }
+
+        public Vector2f Position
+        {
+            set
             {
-                exist = false;
+                _self.Position = value;
+                _from = value;
+                _to = value;
             }
         }
     }

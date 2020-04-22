@@ -8,7 +8,7 @@ namespace strategy
     {
         private int _health;
         private readonly int _maxHealth;
-        private readonly int _damage;
+        public readonly int Damage;
         private readonly double _speed;
         private readonly double _maxRange;
         private readonly  double _minRange;
@@ -26,7 +26,7 @@ namespace strategy
             IsVisible = true;
             _health = health;
             _maxHealth = health;
-            _damage = damage;
+            Damage = damage;
             _speed = speed;
             _maxRange = maxRange;
             _minRange = minRange;
@@ -40,13 +40,14 @@ namespace strategy
                 FillColor = Color.Black,
                 OutlineColor = Color.Black,
                 OutlineThickness = 2,
-                Position = position
+                Position = position,
+                //Origin = new Vector2f(0, 30)
             };
             _healthBar = new RectangleShape
             {
                 Size =  new Vector2f(50, 5),
                 FillColor = Color.Green,
-                Origin = new Vector2f(0, 20),
+                Origin = new Vector2f(0, 30),
                 Position = position,
                 OutlineColor = Color.Black,
                 OutlineThickness = 1
@@ -54,14 +55,14 @@ namespace strategy
             Friendly = friendly;
         }
 
-        public bool ReadyToFire(DateTime time)
+        public bool ReadyToFire()
         {
-            return (time - _previousShotTime).TotalMilliseconds > _reloadTime;
+            return (DateTime.Now - _previousShotTime).TotalMilliseconds > _reloadTime;
         }
 
         public bool AbleToFire(Vector2f target)
         {
-            var distance = MathModule.Length(target - Sprite.Position);
+            var distance = MathModule.Length(MathModule.ReverseVectorTransform(target - Sprite.Position));
             return (distance > _minRange) && (distance < _maxRange);
         }
 

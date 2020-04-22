@@ -39,5 +39,8 @@ namespace strategy
                    (point.X <= rectangle.Position.X + rectangle.Size.X) &&
                    (point.Y <= rectangle.Position.Y + rectangle.Size.Y);
         }
+        
+        public static Vector2f ReverseVectorTransform(Vector2f vector) => new Vector2f(vector.X * -0.25f + vector.Y * 0.5f, vector.X * 0.25f + vector.Y * 0.5f);
+
     }
 }
