@@ -10,12 +10,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Resource Include="res\fonts\labelFont.otf">
+      <Content Include="res\fonts\labelFont.otf">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Resource>
-      <Resource Include="res\images\background.png">
+      </Content>
+      <Content Include="res\images\background.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Resource>
+      </Content>
       <Content Include="res\music\mainTrack.flac">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>

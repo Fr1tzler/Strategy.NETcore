@@ -14,12 +14,16 @@ namespace strategy
         private readonly  double _minRange;
         private readonly  double _reloadTime;
         private DateTime _previousShotTime;
-        private double _viewRadius;
-        public CircleShape sprite;
-        public RectangleShape healthBar;
+        private readonly double _viewRadius;
+        public readonly RectangleShape Sprite;
+        private readonly RectangleShape _healthBar;
+        public Vector2f Destination;
+        public readonly bool Friendly;
+        public bool IsVisible;
 
-        public Unit(int health, int damage, double speed, double maxRange, double minRange, Vector2f position, double reloadTime, double viewRadius)
+        public Unit(int health, int damage, double speed, double maxRange, double minRange, Vector2f position, double reloadTime, double viewRadius, bool friendly)
         {
+            IsVisible = true;
             _health = health;
             _maxHealth = health;
             _damage = damage;
@@ -29,23 +33,25 @@ namespace strategy
             _reloadTime = reloadTime;
             _previousShotTime = DateTime.Now;
             _viewRadius = viewRadius;
-            sprite = new CircleShape
+            Destination = position;
+            Sprite = new RectangleShape
             {
-                Radius = 10,
+                Size = new Vector2f(20,20),
                 FillColor = Color.Cyan,
                 OutlineColor = Color.Black,
                 OutlineThickness = 2,
                 Position = position
             };
-            healthBar = new RectangleShape
+            _healthBar = new RectangleShape
             {
                 Size =  new Vector2f(50, 5),
                 FillColor = Color.Green,
                 Origin = new Vector2f(0, 20),
-                Position = position - new Vector2f(10, 20),
+                Position = position,
                 OutlineColor = Color.Black,
                 OutlineThickness = 1
             };
+            Friendly = friendly;
         }
 
         public bool ReadyToFire(DateTime time)
@@ -55,26 +61,26 @@ namespace strategy
 
         public bool AbleToFire(Vector2f target)
         {
-            var distance = MathModule.Length(target - sprite.Position);
+            var distance = MathModule.Length(target - Sprite.Position);
             return (distance > _minRange) && (distance < _maxRange);
         }
 
-        public void Move(Vector2f destination)
+        public void Move()
         {
-            var delta = destination - sprite.Position;
+            var delta = Destination - Sprite.Position;
             var wayLength = MathModule.Length(delta);
             if (wayLength > 0.1)
             {
                 if (wayLength < _speed)
                 {
-                    sprite.Position = destination;
-                    healthBar.Position = destination;
+                    Sprite.Position = Destination;
+                    _healthBar.Position = Destination;
                 }
                 else
                 {
                     var move = delta * (float) (_speed / wayLength);
-                    healthBar.Position += move;
-                    sprite.Position += move;
+                    _healthBar.Position += move;
+                    Sprite.Position += move;
                 }
             }
         }
@@ -82,8 +88,8 @@ namespace strategy
         public void Display(RenderWindow window)
         {
             if (!Alive) return;
-            window.Draw(sprite);
-            window.Draw(healthBar);
+            window.Draw(Sprite);
+            window.Draw(_healthBar);
         }
         
         public void Fire()
@@ -95,9 +101,9 @@ namespace strategy
         {    
             _health -= incomingDamage;
             var healthCoefficient = _health / (float) _maxHealth;
-            healthBar.Size = new Vector2f(healthCoefficient * 50f, 5);
-            if (healthCoefficient < 0.6f) healthBar.FillColor = Color.Yellow;
-            if (healthCoefficient < 0.2) healthBar.FillColor = Color.Red;
+            _healthBar.Size = new Vector2f(healthCoefficient * 50f, 5);
+            if (healthCoefficient < 0.6) _healthBar.FillColor = Color.Yellow;
+            if (healthCoefficient < 0.4) _healthBar.FillColor = Color.Red;
         }
         
         public bool Alive => _health > 0;
@@ -106,11 +112,11 @@ namespace strategy
 
         public Vector2f Position
         {
-            get => sprite.Position;
+            get => Sprite.Position;
             set
             {
-                sprite.Position = value;
-                healthBar.Position = value;
+                Sprite.Position = value;
+                _healthBar.Position = value;
             }
         }
     }

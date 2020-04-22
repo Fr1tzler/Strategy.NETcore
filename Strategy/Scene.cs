@@ -18,22 +18,23 @@ namespace strategy
         private Vector2f _cursorPosition;
         private readonly List<ConvexShape> _map;
         private readonly List<ConvexShape> _warFog;
-        private ConvexShape _activePolygon;
         private readonly List<Unit> _units;
         private const int HeightCoefficient = 5;
         private readonly Color _warFogColor;
         private readonly Color _orange;
+        private Unit _activeUnit;
         
         public Scene(int seed)
         {
             _warFogColor = new Color(20, 20, 20, 160);
             _orange = new Color(178, 70, 0);
             _units = new List<Unit>();
-            _units.Add(new Unit(100, 1, 1, 1, 1, new Vector2f(500, 500), 1, 200));
-            _units.Add(new Unit(100, 1, 1, 1, 1, new Vector2f(250, 900), 1, 100));
-            _units[0].sprite.FillColor = Color.Green;
+            _units.Add(new Unit(30, 1, 5, 1, 1, new Vector2f(500, 500), 1, 150, true));
+            _units.Add(new Unit(100, 1, 2, 1, 1, new Vector2f(350, 600), 1, 100, false));
+            _units[0].Sprite.FillColor = Color.Green;
+            _units[1].Sprite.FillColor = Color.Red;
             _depthMap = new byte[SizeX + 1, SizeY + 1];
-            _pointOfView = new Vector2f(0, 25);
+            _pointOfView = new Vector2f(1000, 25);
             _cursorPosition = new Vector2f(Game.ScreenWidth / 2f, Game.ScreenHeight / 2f);
             var random = new Random(seed);
             for (var x = 0; x <= SizeX; x++)
@@ -89,18 +90,43 @@ namespace strategy
             {
                 polygon.Position += movement;
                 polygon.OutlineColor = Color.Black;
-                if (!MathModule.PointInsideTriangle(_cursorPosition - polygon.Position, polygon)) continue;
-                _activePolygon = polygon;
-                _activePolygon.OutlineColor = Color.White;
             }
 
-            ///////////
-            _units[0].Move(new Vector2f(0, 1000));
-            _units[0].GetShot(1);
-            //////////
-             
             foreach (var unit in _units)
+            {
+                if (!unit.Friendly) unit.IsVisible = false;
+            }
+            
+            foreach (var unit in _units)
+            {
                 unit.Position += movement;
+                unit.Destination += movement;
+                if (!unit.Friendly) continue;
+                unit.Sprite.OutlineColor = Color.Black;
+                foreach (var enemy in _units)
+                {
+                    if (!enemy.Friendly && MathModule.Length(ReverseVectorTransform(unit.Position - enemy.Position)) <
+                        unit.ViewRadius)
+                        enemy.IsVisible = true;
+                }
+                if (MathModule.PointInsideRectangle(_cursorPosition, unit.Sprite) && Mouse.IsButtonPressed(Mouse.Button.Left))
+                {
+                    _activeUnit = unit;
+                    _activeUnit.Sprite.OutlineColor = Color.White;
+                }
+            }
+            
+            if (_activeUnit != null)
+            {
+                _activeUnit.Sprite.OutlineColor = Color.White;
+                if (Mouse.IsButtonPressed(Mouse.Button.Right))
+                    _activeUnit.Destination = _cursorPosition;
+            }
+
+            foreach (var unit in _units)
+            {
+                unit.Move();
+            }
 
             foreach (var polygon in _warFog)
             {
@@ -108,8 +134,8 @@ namespace strategy
                 polygon.FillColor = _warFogColor;
                 foreach (var unit in _units)
                 {
-                    if (!unit.Alive) continue;
-                    if (MathModule.Length(ReverseVectorTransform(unit.sprite.Position - polygon.Position)) <
+                    if (!unit.Alive || !unit.Friendly) continue;
+                    if (MathModule.Length(ReverseVectorTransform(unit.Position - polygon.Position)) <
                         unit.ViewRadius)
                         polygon.FillColor = Color.Transparent;
                 }
@@ -121,11 +147,10 @@ namespace strategy
             foreach (var polygon in _map)
                 window.Draw(polygon);
             foreach (var shape in _warFog)
-                window.Draw(shape);
-            if (_activePolygon != null)
-                window.Draw(_activePolygon);
+                window.Draw(shape); ;
             foreach (var unit in _units)
-                unit.Display(window);
+                if (unit.IsVisible) 
+                    unit.Display(window);
         }
     }
 }

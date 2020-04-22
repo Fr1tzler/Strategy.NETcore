@@ -21,12 +21,12 @@ namespace strategy
         public MenuPage()
         {
             _startTime = DateTime.Now;
-            var font = new Font("/home/fritzler/Рабочий стол/study/game/Strategy/Strategy/res/fonts/labelFont.otf");
+            var font = new Font("res/fonts/labelFont.otf");
 
             _background = new RectangleShape
             {
                 Size = new Vector2f(2880, 1800),
-                Texture = new Texture("/home/fritzler/Рабочий стол/study/game/Strategy/Strategy/res/images/background.png"),
+                Texture = new Texture("res/images/background.png"),
                 Position = new Vector2f(-100, -100)
             };
 
@@ -88,7 +88,7 @@ namespace strategy
             };
         }
 
-        private Vector2f ScaleConvert(Vector2f input) => input * Game.ScreenWidth / 1920;
+        private static Vector2f ScaleConvert(Vector2f input) => input * Game.ScreenWidth / 1920;
 
         public void Update()
         {
