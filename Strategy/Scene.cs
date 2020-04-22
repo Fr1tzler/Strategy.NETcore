@@ -29,10 +29,9 @@ namespace strategy
             _warFogColor = new Color(20, 20, 20, 160);
             _orange = new Color(178, 70, 0);
             _units = new List<Unit>();
-            _units.Add(new Unit(30, 1, 5, 1, 1, new Vector2f(500, 500), 1, 150, true));
-            _units.Add(new Unit(100, 1, 2, 1, 1, new Vector2f(350, 600), 1, 100, false));
-            _units[0].Sprite.FillColor = Color.Green;
-            _units[1].Sprite.FillColor = Color.Red;
+            _units.Add(new Scout(new Vector2f(500, 500), true));
+            _units.Add(new Tank(new Vector2f(350, 600), false));
+            _units.Add(new Tank(new Vector2f(500, 600), true));
             _depthMap = new byte[SizeX + 1, SizeY + 1];
             _pointOfView = new Vector2f(1000, 25);
             _cursorPosition = new Vector2f(Game.ScreenWidth / 2f, Game.ScreenHeight / 2f);

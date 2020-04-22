@@ -37,7 +37,7 @@ namespace strategy
             Sprite = new RectangleShape
             {
                 Size = new Vector2f(20,20),
-                FillColor = Color.Cyan,
+                FillColor = Color.Black,
                 OutlineColor = Color.Black,
                 OutlineThickness = 2,
                 Position = position
