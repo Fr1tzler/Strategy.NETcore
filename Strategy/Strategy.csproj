@@ -23,6 +23,10 @@
       <Content Include="res\images\tank.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+      <None Remove="res\images\scout.png" />
+      <Content Include="res\images\scout.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

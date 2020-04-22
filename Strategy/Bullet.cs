@@ -41,15 +41,5 @@ namespace strategy
         {
             window.Draw(_self);
         }
-
-        public Vector2f Position
-        {
-            set
-            {
-                _self.Position = value;
-                _from = value;
-                _to = value;
-            }
-        }
     }
 }

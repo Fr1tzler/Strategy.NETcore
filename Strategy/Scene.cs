@@ -12,29 +12,31 @@ namespace strategy
         private const float PolygonSize = 20;
         private const int SizeX = 40;
         private const int SizeY = 40;
-        private const float MapMovingVelocity = 10;
-        private Vector2f _pointOfView;
+        private const float MapMovingVelocity = 20;
         private readonly List<ConvexShape> _map;
         private readonly List<ConvexShape> _warFog;
         private List<Unit> _playerUnits;
         private List<Unit> _enemyUnits;
         private List<Bullet> _bullets;
         private Unit _activeUnit;
-        
+
         public Scene(int seed)
         {
             _bullets = new List<Bullet>();
-            
             _playerUnits = new List<Unit>();
-            _playerUnits.Add(new Base(true));
-            _playerUnits.Add(new Scout(new Vector2f(500, 500), true));
-            _playerUnits.Add(new Tank(new Vector2f(500, 600), true));
+            _playerUnits.Add(new Base(new Vector2f(150, 570), true));
+            _playerUnits.Add(new Scout(new Vector2f(300, 570), true));
+            _playerUnits.Add(new Scout(new Vector2f(240, 570), true));
+            _playerUnits.Add(new Tank(new Vector2f(280, 630), true));
+            _playerUnits.Add(new Tank(new Vector2f(280, 510), true));
 
             _enemyUnits = new List<Unit>();
-            _enemyUnits.Add(new Base(false));
-            _enemyUnits.Add(new Tank(new Vector2f(350, 600), false));
-
-            _pointOfView = new Vector2f(1000, 25);
+            _enemyUnits.Add(new Base(new Vector2f(3000, 570), false));
+            _enemyUnits.Add(new Tank(new Vector2f(2800, 570), false));
+            _enemyUnits.Add(new Tank(new Vector2f(2600, 570), false));
+            _enemyUnits.Add(new Tank(new Vector2f(2700, 500), false));
+            _enemyUnits.Add(new Tank(new Vector2f(2700, 640), false));
+            _enemyUnits.Add(new Tank(new Vector2f(2700, 570), false));
             _map = GenerateMap(new Color(178, 70, 0));
             _warFog = GenerateMap(new Color(20, 20, 20, 160));
         }
@@ -45,6 +47,9 @@ namespace strategy
             for (var x = 0; x < SizeX; x++)
                 for (var y = 0; y < SizeY; y++)
                     result.Add(GetPolygon(new Vector2i(x, y), defaultColor));
+            var shift = new Vector2f(1600, -200);
+            foreach (var shape in result)
+                shape.Position += shift;
             return result;
         }
 
@@ -54,7 +59,7 @@ namespace strategy
             {
                 Position = GetMapPoint(self.X, self.Y),
                 FillColor = defaultColor,
-                OutlineColor =  Color.Black,
+                OutlineColor = Color.Black,
                 OutlineThickness = 1
             };
             polygon.SetPoint(0, new Vector2f(0, 0));
@@ -76,27 +81,45 @@ namespace strategy
 
             var cursorPosition = (Vector2f) Mouse.GetPosition();
             var movement = Controls.GetArrowsState() * -MapMovingVelocity;
-            _pointOfView += movement;
 
-            foreach (var polygon in _map)
-            {
+            foreach (var polygon in _map) 
                 polygon.Position += movement;
-                polygon.OutlineColor = Color.Black;
-            }
 
             foreach (var unit in _enemyUnits) 
                 unit.IsVisible = false;
-
+            
             foreach (var unit in _enemyUnits)
             {
                 unit.Position += movement;
                 unit.Destination += movement;
             }
-            
+
             foreach (var unit in _playerUnits)
             {
                 unit.Position += movement;
                 unit.Destination += movement;
+            }
+
+            foreach (var unit in _playerUnits)
+            {
+                var gridPosition = MathModule.ReverseVectorTransform(unit.Position - _map[0].Position);
+                var x = Math.Min(Math.Max(gridPosition.X, 30), 750);
+                var y = Math.Min(Math.Max(gridPosition.Y, 20), 750);
+                Console.WriteLine(x + " " + y);
+                unit.Position = new Vector2f(2 * (-x + y), x + y) + _map[0].Position;
+            }
+
+            foreach (var unit in _enemyUnits)
+            {
+                var gridPosition = MathModule.ReverseVectorTransform(unit.Position - _map[0].Position);
+                var x = Math.Min(Math.Max(gridPosition.X, 30), 750);
+                var y = Math.Min(Math.Max(gridPosition.Y, 20), 750);
+                unit.Position = new Vector2f(2 * (-x + y), x + y) + _map[0].Position;
+            }
+
+            
+            foreach (var unit in _playerUnits)
+            {
                 unit.Sprite.OutlineColor = Color.Black;
                 foreach (var enemy in _enemyUnits)
                     if (MathModule.Length(MathModule.ReverseVectorTransform(unit.Position - enemy.Position)) < unit.ViewRadius)
@@ -160,6 +183,7 @@ namespace strategy
                         playerUnit.Fire();
                         _bullets.Add(new Bullet(playerUnit.Position, enemyUnit.Position, true));
                         enemyUnit.GetShot(playerUnit.Damage);
+                        break;
                     }
                 }
             }
@@ -175,6 +199,7 @@ namespace strategy
                         enemyUnit.Fire();
                         _bullets.Add(new Bullet(enemyUnit.Position, playerUnit.Position, false));
                         playerUnit.GetShot(enemyUnit.Damage);
+                        break;
                     }
                 }
             }
@@ -189,7 +214,7 @@ namespace strategy
                 window.Draw(shape); ;
             foreach (var unit in _playerUnits)
                 unit.Display(window);
-            foreach (var unit in _enemyUnits.Where(unit => unit.IsVisible))
+            foreach (var unit in _enemyUnits)//.Where(unit => unit.IsVisible))
                 unit.Display(window);
             foreach (var bullet in _bullets)
                 bullet.Display(window);

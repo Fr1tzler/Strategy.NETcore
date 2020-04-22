@@ -41,13 +41,12 @@ namespace strategy
                 OutlineColor = Color.Black,
                 OutlineThickness = 2,
                 Position = position,
-                //Origin = new Vector2f(0, 30)
             };
             _healthBar = new RectangleShape
             {
                 Size =  new Vector2f(50, 5),
                 FillColor = Color.Green,
-                Origin = new Vector2f(0, 30),
+                Origin = new Vector2f(0, 20),
                 Position = position,
                 OutlineColor = Color.Black,
                 OutlineThickness = 1
