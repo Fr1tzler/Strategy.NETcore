@@ -94,17 +94,25 @@ namespace strategy
                 _activePolygon.OutlineColor = Color.White;
             }
 
+            ///////////
+            _units[0].Move(new Vector2f(0, 1000));
+            _units[0].GetShot(1);
+            //////////
+             
             foreach (var unit in _units)
-                unit.sprite.Position += movement;
+                unit.Position += movement;
 
             foreach (var polygon in _warFog)
             {
                 polygon.Position += movement;
                 polygon.FillColor = _warFogColor;
                 foreach (var unit in _units)
+                {
+                    if (!unit.Alive) continue;
                     if (MathModule.Length(ReverseVectorTransform(unit.sprite.Position - polygon.Position)) <
                         unit.ViewRadius)
                         polygon.FillColor = Color.Transparent;
+                }
             }
         }
 
@@ -117,7 +125,7 @@ namespace strategy
             if (_activePolygon != null)
                 window.Draw(_activePolygon);
             foreach (var unit in _units)
-                window.Draw(unit.sprite);
+                unit.Display(window);
         }
     }
 }
