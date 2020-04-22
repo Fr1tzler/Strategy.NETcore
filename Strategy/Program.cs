@@ -11,10 +11,8 @@ namespace strategy
         public static uint ScreenWidth;
         public static uint ScreenHeight;
         private const string Title = "MARS CONQUEST";
-        public static int CurrentState = 3;
-
-        private const int Seed = 228;
-
+        public static int CurrentState = 0;
+        
         /*
          * -1 - exit game
          * 0 - main menu
@@ -38,7 +36,7 @@ namespace strategy
             };
             sound.Play();
             
-            var arena = new Scene(Seed);
+            var arena = new Scene();
             var menu = new MenuPage();
             while (Window.IsOpen)
             {

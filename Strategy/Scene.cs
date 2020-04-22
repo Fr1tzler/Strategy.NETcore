@@ -20,7 +20,7 @@ namespace strategy
         private List<Bullet> _bullets;
         private Unit _activeUnit;
 
-        public Scene(int seed)
+        public Scene()
         {
             _bullets = new List<Bullet>();
             _playerUnits = new List<Unit>();
@@ -99,6 +99,11 @@ namespace strategy
                 unit.Position += movement;
                 unit.Destination += movement;
             }
+            
+            foreach (var unit in _playerUnits)
+                unit.Move();
+            foreach (var unit in _enemyUnits)
+                unit.Move();
 
             foreach (var unit in _playerUnits)
             {
@@ -138,11 +143,6 @@ namespace strategy
                     _activeUnit.Destination = cursorPosition;
             }
 
-            foreach (var unit in _playerUnits)
-                unit.Move();
-            foreach (var unit in _enemyUnits)
-                unit.Move();
-
             var warFogColor = new Color(20, 20, 20, 160);
             foreach (var polygon in _warFog)
             {
@@ -158,10 +158,8 @@ namespace strategy
             }
             
             foreach (var bullet in _bullets)
-            {
                 bullet.Update();
-            }
-            
+
             _playerUnits = _playerUnits
                 .Where(unit => unit.Alive)
                 .ToList();
@@ -177,7 +175,6 @@ namespace strategy
                 if (playerUnit.Damage == 0) continue;
                 if (!playerUnit.ReadyToFire()) continue;
                 foreach (var enemyUnit in _enemyUnits)
-                {
                     if (playerUnit.AbleToFire(enemyUnit.Position))
                     {
                         playerUnit.Fire();
@@ -185,7 +182,6 @@ namespace strategy
                         enemyUnit.GetShot(playerUnit.Damage);
                         break;
                     }
-                }
             }
             
             foreach (var enemyUnit in _enemyUnits)
@@ -193,7 +189,6 @@ namespace strategy
                 if (enemyUnit.Damage == 0) continue;
                 if (!enemyUnit.ReadyToFire()) continue;
                 foreach (var playerUnit in _playerUnits)
-                {
                     if (enemyUnit.AbleToFire(playerUnit.Position))
                     {
                         enemyUnit.Fire();
@@ -201,7 +196,6 @@ namespace strategy
                         playerUnit.GetShot(enemyUnit.Damage);
                         break;
                     }
-                }
             }
             
         }
@@ -214,7 +208,7 @@ namespace strategy
                 window.Draw(shape); ;
             foreach (var unit in _playerUnits)
                 unit.Display(window);
-            foreach (var unit in _enemyUnits)//.Where(unit => unit.IsVisible))
+            foreach (var unit in _enemyUnits.Where(unit => unit.IsVisible))
                 unit.Display(window);
             foreach (var bullet in _bullets)
                 bullet.Display(window);
