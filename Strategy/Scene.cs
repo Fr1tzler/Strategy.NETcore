@@ -45,8 +45,8 @@ namespace strategy
         {
             var result = new List<ConvexShape>();
             for (var x = 0; x < SizeX; x++)
-                for (var y = 0; y < SizeY; y++)
-                    result.Add(GetPolygon(new Vector2i(x, y), defaultColor));
+            for (var y = 0; y < SizeY; y++)
+                result.Add(GetPolygon(new Vector2i(x, y), defaultColor));
             var shift = new Vector2f(1600, -200);
             foreach (var shape in result)
                 shape.Position += shift;
@@ -69,8 +69,9 @@ namespace strategy
             return polygon;
         }
 
-        private static Vector2f GetMapPoint(float x, float y) => new Vector2f(2 * (-x + y) * PolygonSize, (x + y) * PolygonSize);
-        
+        private static Vector2f GetMapPoint(float x, float y) =>
+            new Vector2f(2 * (-x + y) * PolygonSize, (x + y) * PolygonSize);
+
         public void Update()
         {
             if (Keyboard.IsKeyPressed(Keyboard.Key.Escape))
@@ -82,60 +83,42 @@ namespace strategy
             var cursorPosition = (Vector2f) Mouse.GetPosition();
             var movement = Controls.GetArrowsState() * -MapMovingVelocity;
 
-            foreach (var polygon in _map) 
+            foreach (var polygon in _map)
                 polygon.Position += movement;
 
-            foreach (var unit in _enemyUnits) 
+            foreach (var unit in _playerUnits)
+            {
+                unit.Position += movement;
+                unit.Destination += movement;
+                unit.Move();
+                GetCorrectPosition(unit);
+            }
+
+            foreach (var unit in _enemyUnits)
+            {
+                unit.Position += movement;
+                unit.Destination += movement;
+                unit.Move();
+                GetCorrectPosition(unit);
+            }
+
+            foreach (var unit in _enemyUnits)
                 unit.IsVisible = false;
-            
-            foreach (var unit in _enemyUnits)
-            {
-                unit.Position += movement;
-                unit.Destination += movement;
-            }
-
-            foreach (var unit in _playerUnits)
-            {
-                unit.Position += movement;
-                unit.Destination += movement;
-            }
-            
-            foreach (var unit in _playerUnits)
-                unit.Move();
-            foreach (var unit in _enemyUnits)
-                unit.Move();
-
-            foreach (var unit in _playerUnits)
-            {
-                var gridPosition = MathModule.ReverseVectorTransform(unit.Position - _map[0].Position);
-                var x = Math.Min(Math.Max(gridPosition.X, 30), 750);
-                var y = Math.Min(Math.Max(gridPosition.Y, 20), 750);
-                Console.WriteLine(x + " " + y);
-                unit.Position = new Vector2f(2 * (-x + y), x + y) + _map[0].Position;
-            }
-
-            foreach (var unit in _enemyUnits)
-            {
-                var gridPosition = MathModule.ReverseVectorTransform(unit.Position - _map[0].Position);
-                var x = Math.Min(Math.Max(gridPosition.X, 30), 750);
-                var y = Math.Min(Math.Max(gridPosition.Y, 20), 750);
-                unit.Position = new Vector2f(2 * (-x + y), x + y) + _map[0].Position;
-            }
-
-            
             foreach (var unit in _playerUnits)
             {
                 unit.Sprite.OutlineColor = Color.Black;
                 foreach (var enemy in _enemyUnits)
-                    if (MathModule.Length(MathModule.ReverseVectorTransform(unit.Position - enemy.Position)) < unit.ViewRadius)
+                    if (MathModule.Length(MathModule.ReverseVectorTransform(unit.Position - enemy.Position)) <
+                        unit.ViewRadius)
                         enemy.IsVisible = true;
-                if (MathModule.PointInsideRectangle(cursorPosition, unit.Sprite) && Mouse.IsButtonPressed(Mouse.Button.Left))
+                if (MathModule.PointInsideRectangle(cursorPosition, unit.Sprite) &&
+                    Mouse.IsButtonPressed(Mouse.Button.Left))
                 {
                     _activeUnit = unit;
                     _activeUnit.Sprite.OutlineColor = Color.White;
                 }
             }
-            
+
             if (_activeUnit != null)
             {
                 _activeUnit.Sprite.OutlineColor = Color.White;
@@ -156,7 +139,7 @@ namespace strategy
                         polygon.FillColor = Color.Transparent;
                 }
             }
-            
+
             foreach (var bullet in _bullets)
                 bullet.Update();
 
@@ -169,35 +152,34 @@ namespace strategy
             _bullets = _bullets
                 .Where(unit => unit.Exist)
                 .ToList();
-            
-            foreach (var playerUnit in _playerUnits)
+
+            Attack(_playerUnits, _enemyUnits);
+            Attack(_enemyUnits, _playerUnits);
+        }
+
+        private void Attack(List<Unit> attacker, List<Unit> defender)
+        {
+            foreach (var attackUnit in attacker)
             {
-                if (playerUnit.Damage == 0) continue;
-                if (!playerUnit.ReadyToFire()) continue;
-                foreach (var enemyUnit in _enemyUnits)
-                    if (playerUnit.AbleToFire(enemyUnit.Position))
+                if (attackUnit.Damage == 0) continue;
+                if (!attackUnit.ReadyToFire()) continue;
+                foreach (var defendUnit in defender)
+                    if (attackUnit.AbleToFire(defendUnit.Position))
                     {
-                        playerUnit.Fire();
-                        _bullets.Add(new Bullet(playerUnit.Position, enemyUnit.Position, true));
-                        enemyUnit.GetShot(playerUnit.Damage);
+                        attackUnit.Fire();
+                        _bullets.Add(new Bullet(attackUnit.Position, defendUnit.Position, true));
+                        defendUnit.GetShot(attackUnit.Damage);
                         break;
                     }
             }
-            
-            foreach (var enemyUnit in _enemyUnits)
-            {
-                if (enemyUnit.Damage == 0) continue;
-                if (!enemyUnit.ReadyToFire()) continue;
-                foreach (var playerUnit in _playerUnits)
-                    if (enemyUnit.AbleToFire(playerUnit.Position))
-                    {
-                        enemyUnit.Fire();
-                        _bullets.Add(new Bullet(enemyUnit.Position, playerUnit.Position, false));
-                        playerUnit.GetShot(enemyUnit.Damage);
-                        break;
-                    }
-            }
-            
+        }
+
+        private void GetCorrectPosition(Unit unit)
+        {
+            var gridPosition = MathModule.ReverseVectorTransform(unit.Position - _map[0].Position);
+            var x = Math.Min(Math.Max(gridPosition.X, 10), 770);
+            var y = Math.Min(Math.Max(gridPosition.Y, 10), 770);
+            unit.Position = new Vector2f(2 * (-x + y), x + y) + _map[0].Position;
         }
 
         public void Display(RenderWindow window)
@@ -205,7 +187,8 @@ namespace strategy
             foreach (var polygon in _map)
                 window.Draw(polygon);
             foreach (var shape in _warFog)
-                window.Draw(shape); ;
+                window.Draw(shape);
+            ;
             foreach (var unit in _playerUnits)
                 unit.Display(window);
             foreach (var unit in _enemyUnits.Where(unit => unit.IsVisible))

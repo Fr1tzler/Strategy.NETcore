@@ -11,7 +11,7 @@ namespace strategy
         public static uint ScreenWidth;
         public static uint ScreenHeight;
         private const string Title = "MARS CONQUEST";
-        public static int CurrentState = 0;
+        public static int CurrentState;
         
         /*
          * -1 - exit game

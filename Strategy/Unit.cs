@@ -11,17 +11,17 @@ namespace strategy
         public readonly int Damage;
         private readonly double _speed;
         private readonly double _maxRange;
-        private readonly  double _minRange;
-        private readonly  double _reloadTime;
+        private readonly double _minRange;
+        private readonly double _reloadTime;
         private DateTime _previousShotTime;
         private readonly double _viewRadius;
         public readonly RectangleShape Sprite;
         private readonly RectangleShape _healthBar;
         public Vector2f Destination;
-        public readonly bool Friendly;
         public bool IsVisible;
 
-        public Unit(int health, int damage, double speed, double maxRange, double minRange, Vector2f position, double reloadTime, double viewRadius, bool friendly)
+        public Unit(int health, int damage, double speed, double maxRange, double minRange, Vector2f position,
+            double reloadTime, double viewRadius)
         {
             IsVisible = true;
             _health = health;
@@ -36,7 +36,7 @@ namespace strategy
             Destination = position;
             Sprite = new RectangleShape
             {
-                Size = new Vector2f(50,50),
+                Size = new Vector2f(50, 50),
                 FillColor = Color.Black,
                 OutlineColor = Color.Black,
                 OutlineThickness = 2,
@@ -44,20 +44,16 @@ namespace strategy
             };
             _healthBar = new RectangleShape
             {
-                Size =  new Vector2f(50, 5),
+                Size = new Vector2f(50, 5),
                 FillColor = Color.Green,
                 Origin = new Vector2f(0, 20),
                 Position = position,
                 OutlineColor = Color.Black,
                 OutlineThickness = 1
             };
-            Friendly = friendly;
         }
 
-        public bool ReadyToFire()
-        {
-            return (DateTime.Now - _previousShotTime).TotalMilliseconds > _reloadTime;
-        }
+        public bool ReadyToFire() => (DateTime.Now - _previousShotTime).TotalMilliseconds > _reloadTime;
 
         public bool AbleToFire(Vector2f target)
         {
@@ -69,7 +65,7 @@ namespace strategy
         {
             var delta = Destination - Sprite.Position;
             var wayLength = MathModule.Length(delta);
-            if (wayLength > 0.1)
+            if (wayLength > 0.01)
             {
                 if (wayLength < _speed)
                 {
@@ -91,23 +87,20 @@ namespace strategy
             window.Draw(Sprite);
             window.Draw(_healthBar);
         }
-        
-        public void Fire()
-        {
-            _previousShotTime = DateTime.Now;
-        }
+
+        public void Fire() => _previousShotTime = DateTime.Now;
 
         public void GetShot(int incomingDamage)
-        {    
+        {
             _health -= incomingDamage;
             var healthCoefficient = _health / (float) _maxHealth;
             _healthBar.Size = new Vector2f(healthCoefficient * 50f, 5);
             if (healthCoefficient < 0.6) _healthBar.FillColor = Color.Yellow;
             if (healthCoefficient < 0.4) _healthBar.FillColor = Color.Red;
         }
-        
+
         public bool Alive => _health > 0;
-        
+
         public double ViewRadius => _viewRadius;
 
         public Vector2f Position

@@ -8,7 +8,6 @@ namespace strategy
         private Vector2f _from;
         private Vector2f _to;
         private CircleShape _self;
-        private bool _friendly;
         private int _iteration;
         public bool Exist;
         
@@ -23,7 +22,6 @@ namespace strategy
                 OutlineThickness = 1
             };
             _iteration = 1;
-            _friendly = friendly;
             _from = from;
             _to = to;
             Exist = true;
@@ -34,12 +32,10 @@ namespace strategy
         {
             _self.Position = _from * (10 - _iteration) / 10 + _to * _iteration / 10;
             _iteration++;
-            if (_iteration > 10) Exist = false;
+            if (_iteration > 10) 
+                Exist = false;
         }
 
-        public void Display(RenderWindow window)
-        {
-            window.Draw(_self);
-        }
+        public void Display(RenderWindow window) => window.Draw(_self);
     }
 }
