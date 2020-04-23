@@ -10,8 +10,9 @@ namespace strategy
         private CircleShape _self;
         private int _iteration;
         public bool Exist;
+        public readonly int Damage;
         
-        public Bullet(Vector2f from, Vector2f to, bool friendly)
+        public Bullet(Vector2f from, Vector2f to, int damage, bool friendly)
         {
             _self = new CircleShape{
                 Position =  from,
@@ -25,7 +26,7 @@ namespace strategy
             _from = from;
             _to = to;
             Exist = true;
-
+            Damage = damage;
         }
 
         public void Update()
@@ -37,5 +38,10 @@ namespace strategy
         }
 
         public void Display(RenderWindow window) => window.Draw(_self);
+
+        public Vector2f Position
+        {
+            get => _self.Position;
+        }
     }
 }

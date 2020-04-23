@@ -167,7 +167,7 @@ namespace strategy
                     if (attackUnit.AbleToFire(defendUnit.Position))
                     {
                         attackUnit.Fire();
-                        _bullets.Add(new Bullet(attackUnit.Position, defendUnit.Position, true));
+                        _bullets.Add(new Bullet(attackUnit.Position, defendUnit.Position, attackUnit.Damage, true));
                         defendUnit.GetShot(attackUnit.Damage);
                         break;
                     }

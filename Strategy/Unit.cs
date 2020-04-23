@@ -4,6 +4,23 @@ using SFML.System;
 
 namespace strategy
 {
+    public class Scout : Unit
+    {
+        public Scout(Vector2f position, bool friendly) : base(50, 10, 5, 130, 0, position, 800, 150)
+        {
+            Sprite.FillColor = friendly ? Color.Green : Color.Red;
+            Sprite.Texture = new Texture("res/images/scout.png");
+        }
+    }
+    
+    public class Tank : Unit
+    {
+        public Tank(Vector2f position, bool friendly) : base(100, 15, 3, 90, 0, position, 1200, 100)
+        {
+            Sprite.FillColor = friendly ? Color.Green : Color.Red;
+            Sprite.Texture = new Texture("res/images/tank.png");
+        }
+    }
     public class Unit
     {
         private int _health;
@@ -61,6 +78,9 @@ namespace strategy
             return (distance > _minRange) && (distance < _maxRange);
         }
 
+        public bool Visible(double x, double y) =>
+            MathModule.Hypot(this.Position.X - x, this.Position.Y - y) < this._viewRadius;
+
         public void Move()
         {
             var delta = Destination - Sprite.Position;
@@ -81,6 +101,11 @@ namespace strategy
             }
         }
 
+        public void Update(double deltaTime)
+        {
+            
+        }
+        
         public void Display(RenderWindow window)
         {
             if (!Alive) return;

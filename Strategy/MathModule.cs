@@ -8,7 +8,7 @@ namespace strategy
     {
         public static double Length(Vector2f vector) => Hypot(vector.X, vector.Y);
 
-        private static double Hypot(double x, double y) => Math.Sqrt(x * x + y * y);
+        public static double Hypot(double x, double y) => Math.Sqrt(x * x + y * y);
 
         public static bool PointInsideRectangle(Vector2f point, RectangleShape rectangle)
         {
