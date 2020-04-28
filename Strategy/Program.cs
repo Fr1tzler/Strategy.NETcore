@@ -21,6 +21,8 @@ namespace strategy
          * 3 - arena
          * 4 - result
          */
+        
+        /*
         public static void Main()
         {
             ScreenWidth = VideoMode.DesktopMode.Width;
@@ -70,7 +72,7 @@ namespace strategy
                 Window.Display();
             }
         }
-
+*/
         static void Window_Closed(object sender, EventArgs e)
         {
             Window.Close();

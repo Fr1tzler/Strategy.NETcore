@@ -5,17 +5,17 @@ using SFML.System;
 
 namespace strategy
 {
-    public class StateModel
+    public class SceneModel
     {
-        public readonly int SizeX;
-        public readonly int SizeY;
+        public static int SizeX;
+        public static int SizeY;
         public static List<Unit> PlayerUnits;
         public static List<Unit> EnemyUnits;
         public static List<Bullet> PlayerBullets;
         public static List<Bullet> EnemyBullets;
         public static List<bool> PlayerVisiblePolygons;
-        
-        public StateModel(int sizeX, int sizeY)
+
+        public SceneModel(int sizeX, int sizeY)
         {
             SizeX = sizeX;
             SizeY = sizeY;
@@ -55,8 +55,8 @@ namespace strategy
             Attack(PlayerUnits, EnemyUnits, PlayerBullets);
             Attack(EnemyUnits, PlayerUnits, EnemyBullets);
             // Фиксация попаданий
-           GetShots(PlayerBullets, EnemyUnits);
-           GetShots(EnemyBullets, PlayerUnits);
+            GetShots(PlayerBullets, EnemyUnits);
+            GetShots(EnemyBullets, PlayerUnits);
             // Удаление уничтоженных юнитов и снарядов
             PlayerBullets = PlayerBullets
                 .Where(bullet => bullet.Exist)
@@ -99,8 +99,104 @@ namespace strategy
                 }
             }
         }
-        
-        private Vector2f CorrectPosition(Vector2f position) => new Vector2f(Math.Min(Math.Max(position.X, 0), SizeX),
+
+        public static Vector2f CorrectPosition(Vector2f position) => new Vector2f(Math.Min(Math.Max(position.X, 0), SizeX),
             Math.Min(Math.Max(position.Y, 0), SizeY));
+    }
+
+    public class UnitModel
+    {
+        private int _health;
+        private readonly int _maxHealth;
+        public readonly int Damage;
+        private readonly double _speed;
+        private readonly double _maxRange;
+        private readonly double _minRange;
+        public readonly double ReloadTime;
+        private DateTime _previousShotTime;
+        private readonly double _viewRadius;
+        public Vector2f Position;
+        public Vector2f Destination;
+        public bool IsVisible;
+
+        public UnitModel(int health, int damage, double speed, double maxRange, double minRange, Vector2f position,
+            double reloadTime, double viewRadius)
+        {
+            IsVisible = true;
+            _health = health;
+            _maxHealth = health;
+            Damage = damage;
+            _speed = speed;
+            _maxRange = maxRange;
+            _minRange = minRange;
+            ReloadTime = reloadTime;
+            _previousShotTime = DateTime.Now;
+            _viewRadius = viewRadius;
+            Destination = position;
+            Position = position;
+        }
+
+        public bool ReadyToFire() => (DateTime.Now - _previousShotTime).TotalMilliseconds > ReloadTime;
+
+        public bool AbleToFire(Vector2f target)
+        {
+            var distance = MathModule.Length(target - Position);
+            return (distance > _minRange) && (distance < _maxRange);
+        }
+
+        public bool PointVisible(double x, double y) =>
+            MathModule.Hypot(this.Position.X - x, this.Position.Y - y) < this._viewRadius;
+
+        public void Move()
+        {
+            var delta = Destination - Position;
+            var wayLength = MathModule.Length(delta);
+            if (wayLength < 0.01) return;
+            if (wayLength < _speed)
+            {
+                Position = Destination;
+            }
+            else
+            {
+                var move = delta * (float) (_speed / wayLength);
+                Position += move;
+            }
+        }
+
+        public void SetDestination(Vector2f to)
+        {
+            Destination = to;
+        }
+        
+        public void Update(double deltaTime)
+        {
+        }
+
+        public void Fire() => _previousShotTime = DateTime.Now;
+
+        public void GetShot(int incomingDamage) => _health -= incomingDamage;
+
+        public bool Alive => _health > 0;
+
+        public double ViewRadius => _viewRadius;
+    }
+    
+    public class ScoutModel : UnitModel
+    {
+        private string texturePath;
+        public ScoutModel(Vector2f position, bool friendly) : base(50, 10, 5, 130, 0, position, 800, 150)
+        {
+            texturePath = "res/images/scout.png";
+        }
+    }
+    
+    public class TankModel : UnitModel
+    {
+        private string texturePath;
+        
+        public TankModel(Vector2f position, bool friendly) : base(100, 15, 3, 90, 0, position, 1200, 100)
+        {
+            texturePath = "res/images/tank.png";
+        }
     }
 }
