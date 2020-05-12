@@ -27,6 +27,7 @@ namespace strategy
         
         public static void Main()
         {
+            CurrentState = 3;
             ScreenWidth = VideoMode.DesktopMode.Width;
             ScreenHeight = VideoMode.DesktopMode.Height;
             Window = new RenderWindow(new VideoMode(ScreenWidth, ScreenHeight), Title, Styles.Fullscreen);
@@ -40,21 +41,21 @@ namespace strategy
             };
             sound.Play();
             
-            var model = new SceneModel(20, 20);
+            var model = new SceneModel(40, 40);
             var view = new View();
             
-            SceneModel.PlayerUnits.Add(new Base(new Vector2f(150, 570), true));
-            SceneModel.PlayerUnits.Add(new Scout(new Vector2f(300, 570), true));
-            SceneModel.PlayerUnits.Add(new Scout(new Vector2f(240, 570), true));
-            SceneModel.PlayerUnits.Add(new Tank(new Vector2f(280, 630), true));
-            SceneModel.PlayerUnits.Add(new Tank(new Vector2f(280, 510), true));
+            SceneModel.PlayerUnits.Add(new Base(new Vector2f(1, 1), true));
+            SceneModel.PlayerUnits.Add(new Tank(new Vector2f(6, 1), true));
+            SceneModel.PlayerUnits.Add(new Tank(new Vector2f(1, 4), true));
+            SceneModel.PlayerUnits.Add(new Scout(new Vector2f(12, 12), true));
+            SceneModel.PlayerUnits.Add(new Scout(new Vector2f(1, 8), true));
             
-            SceneModel.EnemyUnits.Add(new Base(new Vector2f(3000, 570), false));
-            SceneModel.EnemyUnits.Add(new Tank(new Vector2f(2800, 570), false));
-            SceneModel.EnemyUnits.Add(new Tank(new Vector2f(2600, 570), false));
-            SceneModel.EnemyUnits.Add(new Tank(new Vector2f(2700, 500), false));
-            SceneModel.EnemyUnits.Add(new Tank(new Vector2f(2700, 640), false));
-            SceneModel.EnemyUnits.Add(new Tank(new Vector2f(2700, 570), false));
+            SceneModel.EnemyUnits.Add(new Base(new Vector2f(39, 39), false));
+            SceneModel.EnemyUnits.Add(new Tank(new Vector2f(32, 39), false));
+            SceneModel.EnemyUnits.Add(new Tank(new Vector2f(39, 32), false));
+            SceneModel.EnemyUnits.Add(new Tank(new Vector2f(34, 34), false));
+            SceneModel.EnemyUnits.Add(new Tank(new Vector2f(35, 37), false));
+            SceneModel.EnemyUnits.Add(new Tank(new Vector2f(37, 35), false));
             
             var menu = new MenuPage();
             while (Window.IsOpen)
@@ -78,7 +79,7 @@ namespace strategy
                         CurrentState = 0;
                         break;
                     case 3:
-                        model.Update(1);
+                        model.Update(0.1f);
                         view.Display(Window);
                         break;
                     case 4:

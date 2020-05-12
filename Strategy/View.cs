@@ -10,23 +10,23 @@ namespace strategy
     public class View
     {
         private const float PolygonSize = 20;
-        private const int SizeX = 40;
-        private const int SizeY = 40;
         private const float MapMovingVelocity = 20;
         private readonly List<ConvexShape> _map;
         private readonly List<ConvexShape> _warFog;
         
         public View()
         {
+            var _pov = new Vector2f(0, -1500);
             _map = GenerateMap(new Color(178, 70, 0));
             _warFog = GenerateMap(new Color(20, 20, 20, 160));
+            _map[0].FillColor = Color.Yellow;
         }
 
         private static List<ConvexShape> GenerateMap(Color defaultColor)
         {
             var result = new List<ConvexShape>();
-            for (var x = 0; x < SizeX; x++)
-            for (var y = 0; y < SizeY; y++)
+            for (var x = 0; x < SceneModel.SizeX; x++)
+            for (var y = 0; y < SceneModel.SizeY; y++)
                 result.Add(GetPolygon(new Vector2i(x, y), defaultColor));
             var shift = new Vector2f(1600, -200);
             foreach (var shape in result)
@@ -55,15 +55,30 @@ namespace strategy
 
         public void Update(float dt)
         {
-            var state = Controls.GetArrowsState();
+            var shift = -Controls.GetArrowsState() * MapMovingVelocity * dt;
             foreach (var shape in _map)
             {
-                shape.Position -= state * MapMovingVelocity * dt;
+                shape.Position += shift;
             }
 
             foreach (var shape in _warFog)
             {
-                shape.Position -= state * MapMovingVelocity * dt;
+                shape.Position += shift;
+            }
+
+            for (var x = 0; x < SceneModel.SizeX; x++)
+            {
+                for (var y = 0; y < SceneModel.SizeY; y++)
+                {
+                    if (SceneModel.PlayerVisiblePolygons[y * SceneModel.SizeX + x])
+                    {
+                        _warFog[x * SceneModel.SizeY + y].FillColor = Color.Transparent;
+                    }
+                    else
+                    {
+                        _warFog[x * SceneModel.SizeY + y].FillColor = new Color(20, 20, 20, 160);
+                    }
+                }
             }
         }
         
@@ -76,23 +91,26 @@ namespace strategy
             foreach (var shape in _warFog)
                 window.Draw(shape);
             foreach (var unit in SceneModel.PlayerUnits)
-                DisplayUnit(window, unit, true);
-            foreach (var unit in SceneModel.EnemyUnits.Where(unit => unit.IsVisible))
-                DisplayUnit(window, unit, false);
-            foreach (var bullet in SceneModel.PlayerBullets)
-                bullet.Display(window);
-            foreach (var bullet in SceneModel.EnemyBullets)
-                bullet.Display(window);
-        }
-
-        private void DisplayUnit(RenderWindow window, UnitModel unit, bool friendly)
-        {
-            window.Draw(new CircleShape
             {
-                Radius = 5,
-                FillColor = Color.Yellow,
-                Position = unit.Position
-            });
+                window.Draw(new CircleShape
+                {
+                    Radius = 10,
+                    Position = GetMapPoint(unit.Position.X , unit.Position.Y) + _map[0].Position,
+                    Origin = new Vector2f(10, 10),
+                    FillColor = Color.Green
+                });
+            }
+            foreach (var unit in SceneModel.EnemyUnits.Where(unit => unit.IsVisible))
+            {
+                Console.WriteLine(unit.Position);
+                window.Draw(new CircleShape
+                {
+                    Radius = 10,
+                    Position = GetMapPoint(unit.Position.X , unit.Position.Y) + _map[0].Position,
+                    Origin = new Vector2f(10, 10),
+                    FillColor = Color.Red
+                });
+            }
         }
     }
 }

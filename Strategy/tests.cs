@@ -72,7 +72,7 @@ namespace strategy
 			for (var i = 0; i < 10; i++)
 			{
 				Assert.AreNotEqual(Destination, tank.Position);
-				tank.Move();
+				tank.Move(1);
 			}
 			Assert.AreEqual(Destination, tank.Position);
 		}

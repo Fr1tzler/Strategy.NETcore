@@ -26,10 +26,12 @@ namespace strategy
             PlayerVisiblePolygons = new List<bool>();
             for (var i = 0; i < SizeX * SizeY; i++)
                 PlayerVisiblePolygons.Add(false);
+            
         }
 
-        public void Update(double deltaTime)
+        public void Update(float deltaTime)
         {
+            PlayerUnits[3].Destination = new Vector2f(40, 40);
             // Пересчёт движений юнитов
             foreach (var unit in PlayerUnits)
                 unit.Update(deltaTime);
@@ -148,7 +150,7 @@ namespace strategy
         public bool PointVisible(double x, double y) =>
             MathModule.Hypot(this.Position.X - x, this.Position.Y - y) < this._viewRadius;
 
-        public void Move()
+        public void Move(float deltaTime)
         {
             var delta = Destination - Position;
             var wayLength = MathModule.Length(delta);
@@ -159,7 +161,7 @@ namespace strategy
             }
             else
             {
-                var move = delta * (float) (_speed / wayLength);
+                var move = delta * (float) (_speed / wayLength) * deltaTime;
                 Position += move;
             }
         }
@@ -169,8 +171,9 @@ namespace strategy
             Destination = to;
         }
         
-        public void Update(double deltaTime)
+        public void Update(float deltaTime)
         {
+            this.Move(deltaTime);
         }
 
         public void Fire() => _previousShotTime = DateTime.Now;

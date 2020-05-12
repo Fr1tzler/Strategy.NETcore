@@ -31,9 +31,9 @@ namespace strategy
 
         public void Update()
         {
-            _self.Position = _from * (10 - _iteration) / 10 + _to * _iteration / 10;
+            _self.Position = _from * (3 - _iteration) / 3 + _to * _iteration / 3;
             _iteration++;
-            if (_iteration > 10) 
+            if (_iteration > 5) 
                 Exist = false;
         }
 
