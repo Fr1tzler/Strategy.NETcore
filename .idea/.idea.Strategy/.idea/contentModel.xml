@@ -3,16 +3,23 @@
   <component name="ContentModelStore">
     <e p="$USER_HOME$/.Rider2019.3/system/extResources" t="IncludeRecursive" />
     <e p="$USER_HOME$/.Rider2019.3/system/resharper-host/local/Transient/ReSharperHost/v193/SolutionCaches/_Strategy.-164706058.00" t="ExcludeRecursive" />
+    <e p="$USER_HOME$/.nuget/packages/nunit3testadapter/3.16.1/build/netcoreapp2.1/NUnit3.TestAdapter.dll" t="Include" />
+    <e p="$USER_HOME$/.nuget/packages/nunit3testadapter/3.16.1/build/netcoreapp2.1/NUnit3.TestAdapter.pdb" t="Include" />
+    <e p="$USER_HOME$/.nuget/packages/nunit3testadapter/3.16.1/build/netcoreapp2.1/nunit.engine.api.dll" t="Include" />
+    <e p="$USER_HOME$/.nuget/packages/nunit3testadapter/3.16.1/build/netcoreapp2.1/nunit.engine.dll" t="Include" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p="Strategy" t="IncludeRecursive">
+        <e p="Base.cs" t="Include" />
+        <e p="Bullet.cs" t="Include" />
         <e p="Controls.cs" t="Include" />
         <e p="MathModule.cs" t="Include" />
         <e p="MenuPage.cs" t="Include" />
+        <e p="Model.cs" t="Include" />
         <e p="Program.cs" t="Include" />
-        <e p="Scene.cs" t="Include" />
         <e p="Strategy.csproj" t="IncludeRecursive" />
         <e p="TODO.txt" t="Include" />
         <e p="Unit.cs" t="Include" />
+        <e p="View.cs" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
@@ -27,11 +34,14 @@
           </e>
           <e p="images" t="Include">
             <e p="background.png" t="Include" />
+            <e p="scout.png" t="Include" />
+            <e p="tank.png" t="Include" />
           </e>
           <e p="music" t="Include">
             <e p="mainTrack.flac" t="Include" />
           </e>
         </e>
+        <e p="tests.cs" t="Include" />
         <e p="updateNotes.txt" t="Include" />
       </e>
       <e p="Strategy.sln" t="IncludeFlat" />

@@ -9,8 +9,8 @@ namespace strategy
     {
         public static int SizeX;
         public static int SizeY;
-        public static List<Unit> PlayerUnits;
-        public static List<Unit> EnemyUnits;
+        public static List<UnitModel> PlayerUnits;
+        public static List<UnitModel> EnemyUnits;
         public static List<Bullet> PlayerBullets;
         public static List<Bullet> EnemyBullets;
         public static List<bool> PlayerVisiblePolygons;
@@ -20,8 +20,9 @@ namespace strategy
             SizeX = sizeX;
             SizeY = sizeY;
             PlayerBullets = new List<Bullet>();
-            PlayerUnits = new List<Unit>();
-            EnemyUnits = new List<Unit>();
+            PlayerUnits = new List<UnitModel>();
+            EnemyUnits = new List<UnitModel>();
+            EnemyBullets = new List<Bullet>();
             PlayerVisiblePolygons = new List<bool>();
             for (var i = 0; i < SizeX * SizeY; i++)
                 PlayerVisiblePolygons.Add(false);
@@ -49,7 +50,7 @@ namespace strategy
             for (var x = 0; x < SizeX; x++)
             for (var y = 0; y < SizeY; y++)
                 foreach (var unit in PlayerUnits)
-                    if (unit.Visible(x, y))
+                    if (unit.PointVisible(x, y))
                         PlayerVisiblePolygons[y * SizeX + x] = true;
             // Произведение выстрелов в сторону противника
             Attack(PlayerUnits, EnemyUnits, PlayerBullets);
@@ -72,7 +73,7 @@ namespace strategy
                 .ToList();
         }
 
-        private static void Attack(List<Unit> attaker, List<Unit> defender, List<Bullet> bullets)
+        private static void Attack(List<UnitModel> attaker, List<UnitModel> defender, List<Bullet> bullets)
         {
             foreach (var unit in attaker.Where(unit => unit.ReadyToFire()))
             {
@@ -85,7 +86,7 @@ namespace strategy
             }
         }
 
-        private static void GetShots(List<Bullet> bullets, List<Unit> units)
+        private static void GetShots(List<Bullet> bullets, List<UnitModel> units)
         {
             foreach (var bullet in bullets)
             {
@@ -179,24 +180,5 @@ namespace strategy
         public bool Alive => _health > 0;
 
         public double ViewRadius => _viewRadius;
-    }
-    
-    public class ScoutModel : UnitModel
-    {
-        private string texturePath;
-        public ScoutModel(Vector2f position, bool friendly) : base(50, 10, 5, 130, 0, position, 800, 150)
-        {
-            texturePath = "res/images/scout.png";
-        }
-    }
-    
-    public class TankModel : UnitModel
-    {
-        private string texturePath;
-        
-        public TankModel(Vector2f position, bool friendly) : base(100, 15, 3, 90, 0, position, 1200, 100)
-        {
-            texturePath = "res/images/tank.png";
-        }
     }
 }

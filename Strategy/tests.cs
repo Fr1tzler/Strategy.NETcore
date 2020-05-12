@@ -10,7 +10,7 @@ namespace strategy
 		[Test]
 		public void UnitDies()
 		{
-			var tank = new TankModel(new Vector2f(0, 0), true);
+			var tank = new Tank(new Vector2f(0, 0), true);
 			tank.GetShot(50);
 			Assert.AreEqual(true, tank.Alive);
 			tank.GetShot(50);
@@ -30,7 +30,7 @@ namespace strategy
 		[Test]
 		public void UnitSees()
 		{
-			var tank = new TankModel(new Vector2f(0, 0), true);
+			var tank = new Tank(new Vector2f(0, 0), true);
 			Assert.AreEqual(true, tank.PointVisible(99, 0));
 			Assert.AreEqual(true, tank.PointVisible(0, 99));
 			Assert.AreEqual(true, tank.PointVisible(70, 70));
@@ -42,7 +42,7 @@ namespace strategy
 		[Test]
 		public void UnitFireDistance()
 		{
-			var tank = new TankModel(new Vector2f(0, 0), true);
+			var tank = new Tank(new Vector2f(0, 0), true);
 			Assert.AreEqual(true, tank.AbleToFire(new Vector2f(89, 0)));
 			Assert.AreEqual(true, tank.AbleToFire(new Vector2f(0, 89)));
 			Assert.AreEqual(true, tank.AbleToFire(new Vector2f(63, 63)));
@@ -54,7 +54,7 @@ namespace strategy
 		[Test]
 		public void UnitReadyToFire()
 		{
-			var tank = new TankModel(new Vector2f(0, 0), true);
+			var tank = new Tank(new Vector2f(0, 0), true);
 			var t = DateTime.Now;
 			while ((DateTime.Now - t).TotalMilliseconds < tank.ReloadTime)
 			{
@@ -66,7 +66,7 @@ namespace strategy
 		[Test]
 		public void UnitMoves()
 		{
-			var tank = (UnitModel) new TankModel(new Vector2f(0, 0), true);
+			var tank = (UnitModel) new Tank(new Vector2f(0, 0), true);
 			var Destination = new Vector2f(0, 30);
 			tank.SetDestination(Destination);
 			for (var i = 0; i < 10; i++)

@@ -4,138 +4,25 @@ using SFML.System;
 
 namespace strategy
 {
-    public class Scout : Unit
+    public class Scout : UnitModel
     {
         public Scout(Vector2f position, bool friendly) : base(50, 10, 5, 130, 0, position, 800, 150)
         {
-            Sprite.FillColor = friendly ? Color.Green : Color.Red;
-            Sprite.Texture = new Texture("res/images/scout.png");
         }
     }
     
-    public class Tank : Unit
+    public class Tank : UnitModel
     {
         public Tank(Vector2f position, bool friendly) : base(100, 15, 3, 90, 0, position, 1200, 100)
         {
-            Sprite.FillColor = friendly ? Color.Green : Color.Red;
-            Sprite.Texture = new Texture("res/images/tank.png");
         }
     }
-    public class Unit
+    
+    public class Base : UnitModel
     {
-        private int _health;
-        private readonly int _maxHealth;
-        public readonly int Damage;
-        private readonly double _speed;
-        private readonly double _maxRange;
-        private readonly double _minRange;
-        private readonly double _reloadTime;
-        private DateTime _previousShotTime;
-        private readonly double _viewRadius;
-        public readonly RectangleShape Sprite;
-        private readonly RectangleShape _healthBar;
-        public Vector2f Destination;
-        public bool IsVisible;
-
-        public Unit(int health, int damage, double speed, double maxRange, double minRange, Vector2f position,
-            double reloadTime, double viewRadius)
+        public Base(Vector2f position, bool friendly) : base(1500, 0, 0, 0, 0, new Vector2f(100, 100), 1000, 100)
         {
-            IsVisible = true;
-            _health = health;
-            _maxHealth = health;
-            Damage = damage;
-            _speed = speed;
-            _maxRange = maxRange;
-            _minRange = minRange;
-            _reloadTime = reloadTime;
-            _previousShotTime = DateTime.Now;
-            _viewRadius = viewRadius;
-            Destination = position;
-            Sprite = new RectangleShape
-            {
-                Size = new Vector2f(50, 50),
-                FillColor = Color.Black,
-                OutlineColor = Color.Black,
-                OutlineThickness = 2,
-                Position = position,
-            };
-            _healthBar = new RectangleShape
-            {
-                Size = new Vector2f(50, 5),
-                FillColor = Color.Green,
-                Origin = new Vector2f(0, 20),
-                Position = position,
-                OutlineColor = Color.Black,
-                OutlineThickness = 1
-            };
+            Position = position;
         }
-
-        public bool ReadyToFire() => (DateTime.Now - _previousShotTime).TotalMilliseconds > _reloadTime;
-
-        public bool AbleToFire(Vector2f target)
-        {
-            var distance = MathModule.Length(MathModule.ReverseVectorTransform(target - Sprite.Position));
-            return (distance > _minRange) && (distance < _maxRange);
-        }
-
-        public bool Visible(double x, double y) =>
-            MathModule.Hypot(this.Position.X - x, this.Position.Y - y) < this._viewRadius;
-
-        public void Move()
-        {
-            var delta = Destination - Sprite.Position;
-            var wayLength = MathModule.Length(delta);
-            if (wayLength > 0.01)
-            {
-                if (wayLength < _speed)
-                {
-                    Sprite.Position = Destination;
-                    _healthBar.Position = Destination;
-                }
-                else
-                {
-                    var move = delta * (float) (_speed / wayLength);
-                    _healthBar.Position += move;
-                    Sprite.Position += move;
-                }
-            }
-        }
-
-        public void Update(double deltaTime)
-        {
-            
-        }
-        
-        public void Display(RenderWindow window)
-        {
-            if (!Alive) return;
-            window.Draw(Sprite);
-            window.Draw(_healthBar);
-        }
-
-        public void Fire() => _previousShotTime = DateTime.Now;
-
-        public void GetShot(int incomingDamage)
-        {
-            _health -= incomingDamage;
-            var healthCoefficient = _health / (float) _maxHealth;
-            _healthBar.Size = new Vector2f(healthCoefficient * 50f, 5);
-            if (healthCoefficient < 0.6) _healthBar.FillColor = Color.Yellow;
-            if (healthCoefficient < 0.4) _healthBar.FillColor = Color.Red;
-        }
-
-        public bool Alive => _health > 0;
-
-        public double ViewRadius => _viewRadius;
-
-        public Vector2f Position
-        {
-            get => Sprite.Position;
-            set
-            {
-                Sprite.Position = value;
-                _healthBar.Position = value;
-            }
-        }
-    }
+    } 
 }
