@@ -1,0 +1,46 @@
+Index: .idea/.idea.Strategy/.idea/contentModel.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ContentModelStore\">\n    <e p=\"$USER_HOME$/.Rider2019.3/system/extResources\" t=\"IncludeRecursive\" />\n    <e p=\"$USER_HOME$/.Rider2019.3/system/resharper-host/local/Transient/ReSharperHost/v193/SolutionCaches/_Strategy.-164706058.00\" t=\"ExcludeRecursive\" />\n    <e p=\"$USER_HOME$/.nuget/packages/nunit3testadapter/3.16.1/build/netcoreapp2.1/NUnit3.TestAdapter.dll\" t=\"Include\" />\n    <e p=\"$USER_HOME$/.nuget/packages/nunit3testadapter/3.16.1/build/netcoreapp2.1/NUnit3.TestAdapter.pdb\" t=\"Include\" />\n    <e p=\"$USER_HOME$/.nuget/packages/nunit3testadapter/3.16.1/build/netcoreapp2.1/nunit.engine.api.dll\" t=\"Include\" />\n    <e p=\"$USER_HOME$/.nuget/packages/nunit3testadapter/3.16.1/build/netcoreapp2.1/nunit.engine.dll\" t=\"Include\" />\n    <e p=\"$PROJECT_DIR$\" t=\"IncludeFlat\">\n      <e p=\"Strategy\" t=\"IncludeRecursive\">\n        <e p=\"Base.cs\" t=\"Include\" />\n        <e p=\"Bullet.cs\" t=\"Include\" />\n        <e p=\"Controls.cs\" t=\"Include\" />\n        <e p=\"MathModule.cs\" t=\"Include\" />\n        <e p=\"MenuPage.cs\" t=\"Include\" />\n        <e p=\"Model.cs\" t=\"Include\" />\n        <e p=\"Program.cs\" t=\"Include\" />\n        <e p=\"Strategy.csproj\" t=\"IncludeRecursive\" />\n        <e p=\"TODO.txt\" t=\"Include\" />\n        <e p=\"Unit.cs\" t=\"Include\" />\n        <e p=\"View.cs\" t=\"Include\" />\n        <e p=\"bin\" t=\"ExcludeRecursive\" />\n        <e p=\"obj\" t=\"ExcludeRecursive\">\n          <e p=\"Debug\" t=\"Include\">\n            <e p=\"netcoreapp3.1\" t=\"Include\">\n              <e p=\"Strategy.AssemblyInfo.cs\" t=\"Include\" />\n            </e>\n          </e>\n        </e>\n        <e p=\"res\" t=\"Include\">\n          <e p=\"fonts\" t=\"Include\">\n            <e p=\"labelFont.otf\" t=\"Include\" />\n          </e>\n          <e p=\"images\" t=\"Include\">\n            <e p=\"background.png\" t=\"Include\" />\n            <e p=\"scout.png\" t=\"Include\" />\n            <e p=\"tank.png\" t=\"Include\" />\n          </e>\n          <e p=\"music\" t=\"Include\">\n            <e p=\"mainTrack.flac\" t=\"Include\" />\n          </e>\n        </e>\n        <e p=\"tests.cs\" t=\"Include\" />\n        <e p=\"updateNotes.txt\" t=\"Include\" />\n      </e>\n      <e p=\"Strategy.sln\" t=\"IncludeFlat\" />\n      <e p=\"packages\" t=\"ExcludeRecursive\" />\n    </e>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/.idea.Strategy/.idea/contentModel.xml	(revision f0355692ec48568dbd4bc6f24df48dbceb3d896b)
++++ .idea/.idea.Strategy/.idea/contentModel.xml	(date 1591165634819)
+@@ -1,8 +1,8 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ContentModelStore">
+-    <e p="$USER_HOME$/.Rider2019.3/system/extResources" t="IncludeRecursive" />
+-    <e p="$USER_HOME$/.Rider2019.3/system/resharper-host/local/Transient/ReSharperHost/v193/SolutionCaches/_Strategy.-164706058.00" t="ExcludeRecursive" />
++    <e p="$USER_HOME$/.cache/JetBrains/Rider2020.1/extResources" t="IncludeRecursive" />
++    <e p="$USER_HOME$/.cache/JetBrains/Rider2020.1/resharper-host/local/Transient/ReSharperHost/v201/SolutionCaches/_Strategy.1813297632.00" t="ExcludeRecursive" />
+     <e p="$USER_HOME$/.nuget/packages/nunit3testadapter/3.16.1/build/netcoreapp2.1/NUnit3.TestAdapter.dll" t="Include" />
+     <e p="$USER_HOME$/.nuget/packages/nunit3testadapter/3.16.1/build/netcoreapp2.1/NUnit3.TestAdapter.pdb" t="Include" />
+     <e p="$USER_HOME$/.nuget/packages/nunit3testadapter/3.16.1/build/netcoreapp2.1/nunit.engine.api.dll" t="Include" />
+@@ -17,7 +17,6 @@
+         <e p="Model.cs" t="Include" />
+         <e p="Program.cs" t="Include" />
+         <e p="Strategy.csproj" t="IncludeRecursive" />
+-        <e p="TODO.txt" t="Include" />
+         <e p="Unit.cs" t="Include" />
+         <e p="View.cs" t="Include" />
+         <e p="bin" t="ExcludeRecursive" />
+Index: .idea/.idea.Strategy/.idea/projectSettingsUpdater.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"RiderProjectSettingsUpdater\">\n    <option name=\"vcsConfiguration\" value=\"1\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/.idea.Strategy/.idea/projectSettingsUpdater.xml	(revision f0355692ec48568dbd4bc6f24df48dbceb3d896b)
++++ .idea/.idea.Strategy/.idea/projectSettingsUpdater.xml	(date 1591165634823)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="RiderProjectSettingsUpdater">
+-    <option name="vcsConfiguration" value="1" />
++    <option name="vcsConfiguration" value="2" />
+   </component>
+ </project>
+\ No newline at end of file
